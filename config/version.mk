@@ -13,12 +13,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARROW_MOD_VERSION = v13.1
-ARROW_BUILD_TYPE := UNOFFICIAL
-ARROW_BUILD_ZIP_TYPE := VANILLA
+ARROW_MAJOR_VERSION = 13
+ARROW_MINOR_VERSION = 2
+ARROW_BUILD_TYPE ?= UNOFFICIAL
+ARROW_BUILD_ZIP_TYPE ?= VANILLA
 
-ifeq ($(ARROW_BETA),true)
-    ARROW_BUILD_TYPE := BETA
+ARROW_MAINTAINER ?= Unknown
+
+GET_DEVICE_CODENAME := $(word 2,$(subst _, ,$(TARGET_PRODUCT)))
+CURRENT_DEVICE := $(basename $(GET_DEVICE_CODENAME))
+ARROW_DEVICE_LIST := $(file < infrastructure/devices/arrow.devices)
+ARROW_MAINTAINER_LIST := $(file < infrastructure/devices/arrow.maintainers)
+
+ifneq ($(filter $(CURRENT_DEVICE),$(ARROW_DEVICE_LIST)),)
+    ifneq ($(ARROW_MAINTAINER),)
+        ifneq ($(filter $(ARROW_MAINTAINER),$(ARROW_MAINTAINER_LIST)),)
+            ARROW_BUILD_TYPE := OFFICIAL
+            IS_OFFICIAL_BUILD=true
+        endif
+    endif
 endif
 
 ifeq ($(ARROW_GAPPS), true)
@@ -26,37 +39,14 @@ ifeq ($(ARROW_GAPPS), true)
     ARROW_BUILD_ZIP_TYPE := GAPPS
 endif
 
-CURRENT_DEVICE=$(shell echo "$(TARGET_PRODUCT)" | cut -d'_' -f 2,3)
-
-ifeq ($(ARROW_OFFICIAL), true)
-   LIST = $(shell cat infrastructure/devices/arrow.devices | awk '$$1 != "#" { print $$2 }')
-    ifeq ($(filter $(CURRENT_DEVICE), $(LIST)), $(CURRENT_DEVICE))
-      IS_OFFICIAL=true
-      ARROW_BUILD_TYPE := OFFICIAL
-
+ifeq ($(IS_OFFICIAL_BUILD), true)
 PRODUCT_PACKAGES += \
     Updater
-
-    endif
-    ifneq ($(IS_OFFICIAL), true)
-       ARROW_BUILD_TYPE := UNOFFICIAL
-       $(error Device is not official "$(CURRENT_DEVICE)")
-    endif
 endif
 
-ifeq ($(ARROW_COMMUNITY), true)
-   LIST = $(shell cat infrastructure/devices/arrow-community.devices | awk '$$1 != "#" { print $$2 }')
-    ifeq ($(filter $(CURRENT_DEVICE), $(LIST)), $(CURRENT_DEVICE))
-      IS_COMMUNITY=true
-      ARROW_BUILD_TYPE := COMMUNITY
-    endif
-    ifneq ($(IS_COMMUNITY), true)
-       ARROW_BUILD_TYPE := UNOFFICIAL
-       $(error This isn't a community device "$(CURRENT_DEVICE)")
-    endif
-endif
+ARROW_MOD_VERSION := v$(ARROW_MAJOR_VERSION).$(ARROW_MINOR_VERSION)
 
-ARROW_VERSION := Arrow-$(ARROW_MOD_VERSION)-$(CURRENT_DEVICE)-$(ARROW_BUILD_TYPE)-$(shell date -u +%Y%m%d)-$(ARROW_BUILD_ZIP_TYPE)
+ARROW_VERSION := ArrowExtended-$(ARROW_MOD_VERSION)-$(CURRENT_DEVICE)-$(ARROW_BUILD_TYPE)-$(shell date -u +%Y%m%d)-$(ARROW_BUILD_ZIP_TYPE)
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
   ro.arrow.version=$(ARROW_VERSION) \
@@ -64,7 +54,10 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
   ro.arrow.ziptype=$(ARROW_BUILD_ZIP_TYPE) \
   ro.modversion=$(ARROW_MOD_VERSION)
 
-ARROW_DISPLAY_VERSION := Arrow-$(ARROW_MOD_VERSION)-$(ARROW_BUILD_TYPE)
+ARROW_DISPLAY_VERSION := ArrowExtended-$(ARROW_MOD_VERSION)-$(ARROW_BUILD_TYPE)
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
   ro.arrow.display.version=$(ARROW_DISPLAY_VERSION)
+
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+  ro.device.maintainer=$(ARROW_MAINTAINER)
