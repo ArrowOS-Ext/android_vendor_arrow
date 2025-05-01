@@ -42,11 +42,14 @@ endif
 ifeq ($(IS_OFFICIAL_BUILD), true)
 PRODUCT_PACKAGES += \
     Updater
+
+PRODUCT_COPY_FILES += \
+    vendor/arrow/prebuilt/common/etc/init/init.arrow-updater.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.arrow-updater.rc
 endif
 
-ARROW_MOD_VERSION := v$(ARROW_MAJOR_VERSION).$(ARROW_MINOR_VERSION)
+ARROW_MOD_VERSION := $(ARROW_MAJOR_VERSION).$(ARROW_MINOR_VERSION)
 
-ARROW_VERSION := ArrowExtended-$(ARROW_MOD_VERSION)-$(CURRENT_DEVICE)-$(ARROW_BUILD_TYPE)-$(shell date -u +%Y%m%d)-$(ARROW_BUILD_ZIP_TYPE)
+ARROW_VERSION := ArrowExtended-v$(ARROW_MOD_VERSION)-$(CURRENT_DEVICE)-$(ARROW_BUILD_TYPE)-$(shell date -u +%Y%m%d)-$(ARROW_BUILD_ZIP_TYPE)
 
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
   ro.arrow.version=$(ARROW_VERSION) \

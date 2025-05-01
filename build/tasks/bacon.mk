@@ -10,6 +10,7 @@ ARROW_TARGET_PACKAGE := $(PRODUCT_OUT)/$(ARROW_VERSION).zip
 bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(ARROW_TARGET_PACKAGE)
 	$(hide) $(MD5SUM) $(ARROW_TARGET_PACKAGE) > $(ARROW_TARGET_PACKAGE).md5sum
+	$(hide) ./vendor/arrow/build/tools/generate_ota_json.sh $(TARGET_DEVICE) $(PRODUCT_OUT) $(ARROW_VERSION).zip $(ARROW_MAINTAINER) $(ARROW_MOD_VERSION)
 	echo -e "========================================="
 	echo -e ""
 	echo -e "                 \033[1;34m''\033[0m                  "
