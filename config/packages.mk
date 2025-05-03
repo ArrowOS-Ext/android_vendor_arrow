@@ -128,6 +128,14 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     apns-conf.xml
 
+# Gamespace
+PRODUCT_PACKAGES += \
+    GameSpace
+
+# Preinstalled config
+PRODUCT_PACKAGES += \
+    preinstalled-packages-arrow
+
 # Icon packs
 PRODUCT_PACKAGES += \
     IconPackCircularAndroidOverlay \
