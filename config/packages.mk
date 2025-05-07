@@ -16,17 +16,14 @@
 # Required packages
 PRODUCT_PACKAGES += \
     BluetoothExt \
-    SimpleCalendar \
-    DuckDuckGo \
     ExactCalculator \
+    GalleryGO \
     LatinIME \
     Launcher3QuickStep \
     ParallelSpace \
     messaging \
     Seedvault \
-    SimpleGallery \
     Stk \
-    stats \
     ThemePicker
 
 # SystemUI plugins
