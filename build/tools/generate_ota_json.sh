@@ -37,7 +37,7 @@ fi
 
 SIZE=$(stat -c%s "$FILE_PATH")
 SUM=$(md5sum "$FILE_PATH" | awk '{print $1}')
-DATETIME=$(date +%s)
+DATETIME=$(grep ro.build.date.utc $PRODUCT_OUT/system/build.prop | cut -d= -f2)
 if [ "$BUILDTYPE" != "OFFICIAL" ]; then
     MAINTAINER=""
 else
