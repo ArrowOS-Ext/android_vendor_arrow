@@ -104,6 +104,10 @@ PRODUCT_PACKAGES += \
     ssh-keygen \
     start-ssh
 
+# OmniJaws Service
+PRODUCT_PACKAGES += \
+    OmniJaws
+
 # rsync
 PRODUCT_PACKAGES += \
     rsync
